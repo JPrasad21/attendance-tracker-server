@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateSectionDto } from 'src/class/dto/class.dto';
 import { Class, ClassDocument } from 'src/class/schema/class.schema';
+import { hashing } from 'src/utils/utils';
 import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
 import { User, UserDocument } from './schema/users.schema';
 
@@ -20,6 +20,7 @@ export class UsersService {
       role: 'Teacher',
       password: `teacher2021`
     }
+    teacher.password = await hashing(teacher.password);
     await this.create(teacher);
   }
   async createStudent() {
@@ -44,6 +45,7 @@ export class UsersService {
             role: 'Student',
             password: `student${studentIndex + 1}-${className}-${sectionName}`
           }
+          student.password = await hashing(student.password);
           let user = await this.create(student);
           currentSection.studentId.push(user._id);
         }
