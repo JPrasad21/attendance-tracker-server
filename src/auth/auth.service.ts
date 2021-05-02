@@ -10,8 +10,8 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
 
-    async validateUser(email: string, password: string): Promise<any> {
-        const user = await this.loginService.login(email, password);
+    async validateUser(username: string, password: string): Promise<any> {
+        const user = await this.loginService.login(username, password);
         if (user) {
             const { password, ...result } = user;
             return result;
@@ -21,14 +21,14 @@ export class AuthService {
     }
 
     async login(user: any) {
-        const payload = { username: user.fullName, roleId: user.roleId };
+        const payload = { username: user.username };
         return {
             access_token: this.jwtService.sign(payload, { expiresIn: '60m' }),
         };
     }
 
     async signUp(user: CreateUserDto) {
-        user.roleId = 1;
+        user.role = "Teacher";
         return await this.loginService.signUp(user);
     }
 }

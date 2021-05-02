@@ -6,7 +6,7 @@ export class LoginDto {
         type: 'string',
         required: true
     })
-    email: string;
+    username: string;
 
     @Prop({
         type: 'string',

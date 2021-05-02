@@ -15,15 +15,14 @@ export class LoginService {
     }
 
     async checkPassword(orgPassword: string, incomingPassword: string ) {
-        return (await bcrypt.compare(orgPassword, incomingPassword));
+        let result= await bcrypt.compare(orgPassword, incomingPassword)
+        return result;
     }
 
-    async login(email: string, password: string): Promise<any> {
-        password = await this.hashing(password);
-        const user = await this.userService.findByEmail(email);
-        console.log(user);
+    async login(username: string, password: string): Promise<any> {
+        const user = await this.userService.findByEmail(username);
         if(user){
-            return (await this.checkPassword(user.password, password)) ? user : null;
+            return (await this.checkPassword(password, user.password)) ? user : null;
         } else {
             return null;
         }

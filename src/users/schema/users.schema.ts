@@ -15,7 +15,7 @@ export class User {
   password: string;
 
   @Prop()
-  roleId: number;
+  role: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
