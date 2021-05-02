@@ -13,6 +13,15 @@ export class UsersService {
   create(createUserDto: CreateUserDto) {
     return this.userModel.create(createUserDto);
   }
+  async createTeacher() {
+    const teacher: CreateUserDto = {
+      fullName: `Teacher`,
+      email: `teacher@gmail.com`,
+      role: 'Teacher',
+      password: `teacher2021`
+    }
+    await this.create(teacher);
+  }
   async createStudent() {
     const classes = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
     const section = ["A", "B", "C", "D"];
