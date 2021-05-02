@@ -24,7 +24,7 @@ export class UsersService {
     await this.create(teacher);
   }
   async createStudent() {
-    const classes = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+    const classes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
     const section = ["A", "B", "C", "D"];
     for (let classIndex = 0; classIndex < classes.length; classIndex++) {
       const className = classes[classIndex];

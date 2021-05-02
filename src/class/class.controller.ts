@@ -1,24 +1,28 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { ResponseGenerator } from 'src/core/response.render';
 import { ClassService } from './class.service';
 import { CreateClassDto as createSectionDto, CreateSectionDto, UpdateClassDto } from './dto/class.dto';
 
 @Controller('class')
 export class ClassController {
-  constructor(private readonly classService: ClassService) {}
+  constructor(private readonly classService: ClassService) { }
 
   @Post()
-  create(@Body() createClassDto: createSectionDto) {
-    return this.classService.create(createClassDto);
+  async create(@Body() createClassDto: createSectionDto) {
+    const classObj = await this.classService.create(createClassDto);
+    return ResponseGenerator.responseGenerator(true, classObj, '00');
   }
 
   @Get()
-  findAll() {
-    return this.classService.findAll();
+  async findAll() {
+    const classObj = await this.classService.findAll()
+    return ResponseGenerator.responseGenerator(true, classObj, '00');
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.classService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const classObj = await this.classService.findOne(id);
+    return ResponseGenerator.responseGenerator(true, classObj, '00');
   }
 
   @Put(':id')
@@ -42,7 +46,7 @@ export class ClassController {
   }
 
   @Put(':classId/section/:id')
-  updateSection(@Param('classId') classId: string,@Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
+  updateSection(@Param('classId') classId: string, @Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
     return this.classService.updateSection(classId, id, updateClassDto);
   }
 }
