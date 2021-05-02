@@ -6,17 +6,19 @@ export type SectionDocument = Section & Document;
 
 @Schema()
 export class Section {
-  @Prop()
+  @Prop({ required: true })
   sectionName: string;
+  @Prop({ type: [mongooseSchema.Types.ObjectId], ref: 'Users' })
+  studentId: string[];
 }
 const SectionSchema = SchemaFactory.createForClass(Section);
 
 @Schema()
 export class Class {
-  @Prop({unique: true})
+  @Prop({ unique: true })
   className: string;
 
-  @Prop({type: [SectionSchema]})
+  @Prop({ type: [SectionSchema] })
   sections: Section[];
 }
 const ClassSchema = SchemaFactory.createForClass(Class);

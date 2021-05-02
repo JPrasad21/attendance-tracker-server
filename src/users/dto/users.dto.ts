@@ -5,6 +5,8 @@ export class CreateUserDto {
   email: string;
   password: string;
   role: string;
+  className?: string;
+  sectionName?: string; 
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
