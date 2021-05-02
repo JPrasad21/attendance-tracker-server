@@ -8,7 +8,7 @@ export type SectionDocument = Section & Document;
 export class Section {
   @Prop({ required: true })
   sectionName: string;
-  @Prop({ type: [mongooseSchema.Types.ObjectId], ref: 'Users' })
+  @Prop({ type: [mongooseSchema.Types.ObjectId], ref: 'User' })
   studentId: string[];
 }
 const SectionSchema = SchemaFactory.createForClass(Section);

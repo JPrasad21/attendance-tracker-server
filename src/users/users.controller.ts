@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService as UserService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
+import { ResponseGenerator } from 'src/core/response.render';
 
 @Controller('user')
 export class UserController {
@@ -18,6 +19,12 @@ export class UserController {
   @Post('/teacher')
   createTeacher() {
     return this.userService.createTeacher();
+  }
+
+  @Get('/student/:studentId')
+  async findStudent(@Param('studentId') studentId: string) {
+    const user = await this.userService.findStudent(studentId);
+    return ResponseGenerator.responseGenerator(true, user, '00');
   }
 
   @Get()

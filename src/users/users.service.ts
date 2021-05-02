@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Class, ClassDocument } from 'src/class/schema/class.schema';
 import { hashing } from 'src/utils/utils';
 import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
@@ -53,7 +53,7 @@ export class UsersService {
       }
       await this.classModel.create(classObj);
     }
-    return 'Success';
+    return { result: 'Success' };
   }
   findAll() {
     return this.userModel.find().exec();
@@ -61,6 +61,23 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+  }
+  async findStudent(studentId: string) {
+    const classObj = await this.classModel.findOne({ 'sections.studentId': Types.ObjectId(studentId) }).populate("sections.studentId");
+    let result = {
+      className: classObj.className,
+      classId: classObj._id,
+    }
+    classObj.sections.forEach((section) => {
+      const students: any = section.studentId;
+      const filteredStudent: any = students.filter((student) => (student as any)._id.toString() === studentId)[0];
+      if (filteredStudent) {
+        result['student'] = filteredStudent;
+        result['sectionName'] = section.sectionName;
+        result['sectionId'] = section['_id'];
+      }
+    });
+    return result;
   }
   findByEmail(email: string) {
     return this.userModel.findOne({ email }).exec();
