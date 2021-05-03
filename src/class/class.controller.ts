@@ -18,9 +18,9 @@ export class ClassController {
     return ResponseGenerator.responseGenerator(true, classObj, '00');
   }
 
-  @Get()
-  async findAll() {
-    const classObj = await this.classService.findAll();
+  @Get('/date/:date')
+  async findAll(@Param('date') date: string) {
+    const classObj = await this.classService.findAll(date);
     return ResponseGenerator.responseGenerator(true, classObj, '00');
   }
 

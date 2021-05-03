@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateClassDto, UpdateClassDto } from './dto/class.dto';
 import { Class, ClassDocument } from './schema/class.schema';
-
 @Injectable()
 export class ClassService {
   constructor(
@@ -39,15 +38,68 @@ export class ClassService {
     return { success: 'true' };
   }
 
-  findAll() {
+  findOne(id: string) {
     return this.classModel.find().populate('sections.studentId').exec();
   }
 
-  findOne(id: string) {
-    return this.classModel
-      .findOne({ _id: id })
-      .populate('sections.studentId')
-      .exec();
+  async findAll(date: string) {
+    const classObj = await this.classModel.aggregate([
+      {
+        $lookup: {
+          from: 'Attendance',
+          as: 'attendance',
+          let: {
+            class_id: '$_id',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: ['$date', date],
+                    },
+                    {
+                      $eq: ['$classId', '$$class_id'],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'Users',
+          localField: '_id',
+          foreignField: 'class',
+          as: 'students',
+        },
+      },
+      {
+        $project: {
+          className: 1,
+          sectionName: 1,
+          attendanceCount: {
+            $size: '$attendance',
+          },
+          studentsCount: {
+            $size: '$students',
+          },
+        },
+      },
+      {
+        $project: {
+          className: 1,
+          sectionName: 1,
+          percentage: {
+            $divide: ['$attendanceCount', '$studentsCount'],
+          },
+        },
+      },
+    ]);
+    return classObj;
   }
 
   update(id: string, updateClassDto: UpdateClassDto) {
