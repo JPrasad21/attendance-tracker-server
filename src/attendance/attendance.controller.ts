@@ -20,8 +20,8 @@ export class AttendanceController {
     return ResponseGenerator.responseGenerator(true, result, '00');
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.attendanceService.findOne(+id);
+  @Get('/:studentId')
+  getAttendanceByStudentId(@Param('studentId') studentId: string) {
+    return this.attendanceService.getAttendanceByStudentId(studentId);
   }
 }

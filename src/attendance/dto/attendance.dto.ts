@@ -8,5 +8,5 @@ export class CreateAttendanceDto {
 }
 
 export class UpdateAttendanceDto extends PartialType(CreateAttendanceDto) {
-  id: number;
+  _id: string;
 }

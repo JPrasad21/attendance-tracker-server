@@ -4,11 +4,27 @@ import { UserController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schema/users.schema';
 import { Class, ClassSchema } from 'src/class/schema/class.schema';
+import { AttendanceModule } from 'src/attendance/attendance.module';
+import { AttendanceService } from 'src/attendance/attendance.service';
+import {
+  Attendance,
+  AttendanceSchema,
+} from 'src/attendance/schema/attendance.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema, collection: 'Users' }, { name: Class.name, schema: ClassSchema, collection: 'Class' }])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema, collection: 'Users' },
+      { name: Class.name, schema: ClassSchema, collection: 'Class' },
+      {
+        name: Attendance.name,
+        schema: AttendanceSchema,
+        collection: 'Attendance',
+      },
+    ]),
+  ],
   controllers: [UserController],
-  providers: [UsersService],
-  exports: [UsersService]
+  providers: [UsersService, AttendanceService],
+  exports: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}
