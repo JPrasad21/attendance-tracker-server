@@ -1,11 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
 import { ResponseGenerator } from 'src/core/response.render';
 import { ClassService } from './class.service';
-import { CreateClassDto as createSectionDto, CreateSectionDto, UpdateClassDto } from './dto/class.dto';
+import {
+  CreateClassDto as createSectionDto,
+  CreateSectionDto,
+  UpdateClassDto,
+} from './dto/class.dto';
 
 @Controller('class')
 export class ClassController {
-  constructor(private readonly classService: ClassService) { }
+  constructor(private readonly classService: ClassService) {}
 
   @Post()
   async create(@Body() createClassDto: createSectionDto) {
@@ -15,7 +19,7 @@ export class ClassController {
 
   @Get()
   async findAll() {
-    const classObj = await this.classService.findAll()
+    const classObj = await this.classService.findAll();
     return ResponseGenerator.responseGenerator(true, classObj, '00');
   }
 
@@ -31,7 +35,10 @@ export class ClassController {
   }
 
   @Post(':classId/section')
-  createSection(@Param('classId') classId: string, @Body() createSectionDto: CreateSectionDto) {
+  createSection(
+    @Param('classId') classId: string,
+    @Body() createSectionDto: CreateSectionDto,
+  ) {
     return this.classService.createSection(createSectionDto);
   }
 
@@ -46,7 +53,11 @@ export class ClassController {
   }
 
   @Put(':classId/section/:id')
-  updateSection(@Param('classId') classId: string, @Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
+  updateSection(
+    @Param('classId') classId: string,
+    @Param('id') id: string,
+    @Body() updateClassDto: UpdateClassDto,
+  ) {
     return this.classService.updateSection(classId, id, updateClassDto);
   }
 }

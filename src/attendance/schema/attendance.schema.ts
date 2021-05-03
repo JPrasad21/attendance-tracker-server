@@ -5,14 +5,13 @@ export type AttendanceDocument = Attendance & Document;
 
 @Schema()
 export class Attendance {
-
   @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'User' })
   studentId: string;
 
   @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'Class' })
   classId: string;
 
-  @Prop()
+  @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'Section' })
   sectionId: string;
 
   @Prop()

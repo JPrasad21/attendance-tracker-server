@@ -5,13 +5,16 @@ import { CreateAttendanceDto } from './dto/attendance.dto';
 
 @Controller('attendance')
 export class AttendanceController {
-
-  constructor(private readonly attendanceService: AttendanceService) { }
+  constructor(private readonly attendanceService: AttendanceService) {}
 
   @Post()
   async create(@Body() createAttendanceDto: CreateAttendanceDto) {
     const attendance = await this.attendanceService.create(createAttendanceDto);
-    return ResponseGenerator.responseGenerator(true, attendance ? true : false, '00');
+    return ResponseGenerator.responseGenerator(
+      true,
+      attendance ? true : false,
+      '00',
+    );
   }
 
   @Get('/check/:studentId')
