@@ -41,9 +41,11 @@ export class UserController {
     return ResponseGenerator.responseGenerator(true, user, '00');
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Roles(Role.Teacher)
+  @Get('/classStudents/:classId')
+  async getStudentsOfClass(@Param('classId') classId: string) {
+    const students = await this.userService.getStudentsOfClass(classId);
+    return ResponseGenerator.responseGenerator(true, students, '00');
   }
 
   @Get(':id')

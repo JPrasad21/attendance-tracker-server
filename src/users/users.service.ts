@@ -86,6 +86,30 @@ export class UsersService {
     );
     return user;
   }
+
+  async getStudentsOfClass(classId: string) {
+    let students = await this.userModel.aggregate([
+      {
+        $match: {
+          class: Types.ObjectId(classId),
+        },
+      },
+      {
+        $lookup: {
+          from: 'Attendance',
+          localField: '_id',
+          foreignField: 'studentId',
+          as: 'attendanceList',
+        },
+      },
+    ]);
+    students.forEach((student) => {
+      student.attendancePercentage = this.attendanceService.getAttendancePercentageForStudent(
+        student.attendanceList,
+      );
+    });
+    return students;
+  }
   findByEmail(email: string) {
     return this.userModel.findOne({ email }).exec();
   }
