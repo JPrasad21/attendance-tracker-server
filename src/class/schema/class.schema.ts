@@ -2,27 +2,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as mongooseSchema } from 'mongoose';
 
 export type ClassDocument = Class & Document;
-export type SectionDocument = Section & Document;
-
-@Schema()
-export class Section {
-  @Prop({ required: true })
-  sectionName: string;
-  @Prop({ type: [mongooseSchema.Types.ObjectId], ref: 'User' })
-  studentId: string[];
-}
-const SectionSchema = SchemaFactory.createForClass(Section);
-
 @Schema()
 export class Class {
-  @Prop({ unique: true })
+  @Prop()
   className: string;
-
-  @Prop({ type: [SectionSchema] })
-  sections: Section[];
+  @Prop()
+  sectionName: string;
 }
 const ClassSchema = SchemaFactory.createForClass(Class);
-
-export {
-  ClassSchema, SectionSchema
-}
+ClassSchema.index({ className: 1, sectionName: 1 }, { unique: true });
+export { ClassSchema };

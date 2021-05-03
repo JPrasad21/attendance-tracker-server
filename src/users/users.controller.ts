@@ -12,6 +12,7 @@ import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
 import { ResponseGenerator } from 'src/core/response.render';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/auth/roles/roles.enum';
+import { Public } from 'src/auth/public';
 
 @Controller('user')
 export class UserController {
@@ -22,10 +23,12 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Public()
   @Post('/student')
   createStudent() {
     return this.userService.createStudent();
   }
+  @Public()
   @Post('/teacher')
   createTeacher() {
     return this.userService.createTeacher();

@@ -1,27 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  CreateClassDto,
-  CreateSectionDto,
-  UpdateClassDto,
-  UpdateSectionDto,
-} from './dto/class.dto';
-import {
-  Class,
-  ClassDocument,
-  Section,
-  SectionDocument,
-} from './schema/class.schema';
+import { CreateClassDto, UpdateClassDto } from './dto/class.dto';
+import { Class, ClassDocument } from './schema/class.schema';
 
 @Injectable()
 export class ClassService {
   constructor(
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
-    @InjectModel(Section.name) private sectionModel: Model<SectionDocument>,
   ) {}
-  create(createClassDto: CreateClassDto) {
-    return this.classModel.create(createClassDto);
+  async create(createClassDto: CreateClassDto) {
+    const classes = [
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+    ];
+    const section = ['A', 'B', 'C', 'D'];
+    for (let cIndex = 0; cIndex < classes.length; cIndex++) {
+      const className = classes[cIndex];
+      const classObj: Class = {
+        className,
+        sectionName: '',
+      };
+      for (let sIndex = 0; sIndex < section.length; sIndex++) {
+        classObj.sectionName = section[sIndex];
+        await this.classModel.create(classObj);
+      }
+    }
+    return { success: 'true' };
   }
 
   findAll() {
@@ -37,28 +52,5 @@ export class ClassService {
 
   update(id: string, updateClassDto: UpdateClassDto) {
     return this.classModel.updateOne({ _id: id }, updateClassDto);
-  }
-
-  createSection(createSectionDto: CreateSectionDto) {
-    return this.sectionModel.create(createSectionDto);
-  }
-
-  findAllSections(classId: string) {
-    return this.sectionModel.find({ classInfo: classId }).exec();
-  }
-
-  findSection(classId: string, id: string) {
-    return this.sectionModel.findOne({ _id: id, classInfo: classId }).exec();
-  }
-
-  updateSection(
-    classId: string,
-    id: string,
-    updateSectionDto: UpdateSectionDto,
-  ) {
-    return this.sectionModel.updateOne(
-      { _id: id, classInfo: classId },
-      updateSectionDto,
-    );
   }
 }

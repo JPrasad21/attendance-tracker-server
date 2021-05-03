@@ -4,7 +4,7 @@ export class CreateAttendanceDto {
   studentId: string;
   classId: string;
   date: string;
-  sessionId: string;
+  status: string;
 }
 
 export class UpdateAttendanceDto extends PartialType(CreateAttendanceDto) {

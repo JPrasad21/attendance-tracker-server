@@ -11,11 +11,11 @@ export class Attendance {
   @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'Class' })
   classId: string;
 
-  @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'Section' })
-  sectionId: string;
-
   @Prop()
   date: string;
+
+  @Prop()
+  status: string;
 }
 
 export const AttendanceSchema = SchemaFactory.createForClass(Attendance);

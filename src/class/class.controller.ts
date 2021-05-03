@@ -1,21 +1,19 @@
 import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import { Public } from 'src/auth/public';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/auth/roles/roles.enum';
 import { ResponseGenerator } from 'src/core/response.render';
 import { ClassService } from './class.service';
-import {
-  CreateClassDto as createSectionDto,
-  CreateSectionDto,
-  UpdateClassDto,
-} from './dto/class.dto';
+import { CreateClassDto, UpdateClassDto } from './dto/class.dto';
 
 @Roles(Role.Teacher)
 @Controller('class')
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
 
+  @Public()
   @Post()
-  async create(@Body() createClassDto: createSectionDto) {
+  async create(@Body() createClassDto: CreateClassDto) {
     const classObj = await this.classService.create(createClassDto);
     return ResponseGenerator.responseGenerator(true, classObj, '00');
   }
@@ -35,32 +33,5 @@ export class ClassController {
   @Put(':id')
   update(@Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
     return this.classService.update(id, updateClassDto);
-  }
-
-  @Post(':classId/section')
-  createSection(
-    @Param('classId') classId: string,
-    @Body() createSectionDto: CreateSectionDto,
-  ) {
-    return this.classService.createSection(createSectionDto);
-  }
-
-  @Get(':classId/section')
-  findAllSections(@Param('classId') classId: string) {
-    return this.classService.findAllSections(classId);
-  }
-
-  @Get(':classId/section/:id')
-  findSection(@Param('classId') classId: string, @Param('id') id: string) {
-    return this.classService.findSection(classId, id);
-  }
-
-  @Put(':classId/section/:id')
-  updateSection(
-    @Param('classId') classId: string,
-    @Param('id') id: string,
-    @Body() updateClassDto: UpdateClassDto,
-  ) {
-    return this.classService.updateSection(classId, id, updateClassDto);
   }
 }

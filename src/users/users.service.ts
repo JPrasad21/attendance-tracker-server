@@ -28,56 +28,26 @@ export class UsersService {
     await this.create(teacher);
   }
   async createStudent() {
-    const classes = [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '10',
-      '11',
-      '12',
-    ];
-    const section = ['A', 'B', 'C', 'D'];
-    for (let classIndex = 0; classIndex < classes.length; classIndex++) {
-      const className = classes[classIndex];
-      const classObj: Class = {
-        className,
-        sections: [],
-      };
-      for (
-        let sectionIndex = 0;
-        sectionIndex < section.length;
-        sectionIndex++
-      ) {
-        const sectionName = section[sectionIndex];
-        const currentSection = {
-          sectionName,
-          studentId: [],
+    const classObjs = await this.classModel.find().exec();
+    for (let i = 0; i < classObjs.length; i++) {
+      const { _id, className, sectionName } = classObjs[i];
+      for (let studentIndex = 0; studentIndex < 5; studentIndex++) {
+        const student: CreateUserDto = {
+          fullName: `Student ${studentIndex + 1}`,
+          email: `student${
+            studentIndex + 1
+          }-${className}-${sectionName}@gmail.com`,
+          role: 'Student',
+          password: `student${studentIndex + 1}-${className}-${sectionName}`,
+          class: _id,
         };
-        for (let studentIndex = 0; studentIndex < 5; studentIndex++) {
-          const student: CreateUserDto = {
-            fullName: `Student ${studentIndex + 1}`,
-            email: `student${
-              studentIndex + 1
-            }-${className}-${sectionName}@gmail.com`,
-            role: 'Student',
-            password: `student${studentIndex + 1}-${className}-${sectionName}`,
-          };
-          student.password = await hashing(student.password);
-          let user = await this.create(student);
-          currentSection.studentId.push(user._id);
-        }
-        classObj.sections.push(currentSection);
+        student.password = await hashing(student.password);
+        let user = await this.create(student);
       }
-      await this.classModel.create(classObj);
     }
     return { result: 'Success' };
   }
+
   findAll() {
     return this.userModel.find().exec();
   }
@@ -86,35 +56,35 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
   async findStudent(studentId: string) {
-    const classObj = await this.classModel
-      .findOne({ 'sections.studentId': Types.ObjectId(studentId) })
-      .populate('sections.studentId');
-    const attendanceList = await this.attendanceService.getAttendanceByStudentId(
-      studentId,
+    let user = (
+      await this.userModel.aggregate([
+        {
+          $match: {
+            _id: Types.ObjectId(studentId),
+          },
+        },
+        {
+          $lookup: {
+            from: 'Class',
+            localField: 'class',
+            foreignField: '_id',
+            as: 'classDetails',
+          },
+        },
+        {
+          $lookup: {
+            from: 'Attendance',
+            localField: '_id',
+            foreignField: 'studentId',
+            as: 'attendanceList',
+          },
+        },
+      ])
+    )[0];
+    user.attendancePercentage = this.attendanceService.getAttendancePercentageForStudent(
+      user.attendanceList,
     );
-    const {
-      attendancePercentage,
-    } = this.attendanceService.getAttendancePercentageForStudent(
-      attendanceList,
-    );
-    let result = {
-      className: classObj.className,
-      classId: classObj._id,
-      attendancePercentage,
-      attendanceList,
-    };
-    classObj.sections.forEach((section) => {
-      const students: any = section.studentId;
-      const filteredStudent: any = students.filter(
-        (student) => (student as any)._id.toString() === studentId,
-      )[0];
-      if (filteredStudent) {
-        result['student'] = filteredStudent;
-        result['sectionName'] = section.sectionName;
-        result['sectionId'] = section['_id'];
-      }
-    });
-    return result;
+    return user;
   }
   findByEmail(email: string) {
     return this.userModel.findOne({ email }).exec();

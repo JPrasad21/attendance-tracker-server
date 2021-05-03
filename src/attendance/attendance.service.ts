@@ -32,8 +32,6 @@ export class AttendanceService {
     let currentMonth = dayjs().get('month');
     let firstDay = dayjs().month(currentMonth).date(1);
     let noOfvalidDays = dayjs().diff(firstDay, 'day') + 1;
-    return {
-      attendancePercentage: (attendanceList.length / noOfvalidDays) * 100,
-    };
+    return ((attendanceList.length / noOfvalidDays) * 100).toFixed(2);
   }
 }
