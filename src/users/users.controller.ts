@@ -10,6 +10,8 @@ import {
 import { UsersService as UserService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
 import { ResponseGenerator } from 'src/core/response.render';
+import { Roles } from 'src/auth/roles/roles.decorator';
+import { Role } from 'src/auth/roles/roles.enum';
 
 @Controller('user')
 export class UserController {
@@ -29,6 +31,7 @@ export class UserController {
     return this.userService.createTeacher();
   }
 
+  @Roles(Role.Student)
   @Get('/student/:studentId')
   async findStudent(@Param('studentId') studentId: string) {
     const user = await this.userService.findStudent(studentId);

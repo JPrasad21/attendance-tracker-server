@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Roles } from 'src/auth/roles/roles.decorator';
+import { Role } from 'src/auth/roles/roles.enum';
 import { ResponseGenerator } from 'src/core/response.render';
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/attendance.dto';
 
+@Roles(Role.Student)
 @Controller('attendance')
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}

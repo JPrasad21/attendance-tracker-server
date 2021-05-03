@@ -1,4 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import { Roles } from 'src/auth/roles/roles.decorator';
+import { Role } from 'src/auth/roles/roles.enum';
 import { ResponseGenerator } from 'src/core/response.render';
 import { ClassService } from './class.service';
 import {
@@ -7,6 +9,7 @@ import {
   UpdateClassDto,
 } from './dto/class.dto';
 
+@Roles(Role.Teacher)
 @Controller('class')
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
