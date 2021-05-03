@@ -9,6 +9,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RolesGuard } from './auth/roles.guard';
     UsersModule,
     ClassModule,
     AttendanceModule,
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [

@@ -8,7 +8,7 @@ export class ClassService {
   constructor(
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
   ) {}
-  async create(createClassDto: CreateClassDto) {
+  async create(createClassDto: CreateClassDto = null) {
     const classes = [
       '1',
       '2',

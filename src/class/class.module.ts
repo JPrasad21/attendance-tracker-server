@@ -12,5 +12,6 @@ import { Class, ClassSchema } from './schema/class.schema';
   ],
   controllers: [ClassController],
   providers: [ClassService],
+  exports: [ClassService],
 })
 export class ClassModule {}
